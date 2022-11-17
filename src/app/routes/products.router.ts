@@ -1,26 +1,17 @@
-import path from "node:path";
 
 import { Router } from "express";
-import multer from "multer";
+import { upload } from "../../shared/middlewares/product/uploadImage";
+import { PreductsUseCase } from "../useCases/product/products.useCase";
+const preductsUseCase = new PreductsUseCase();
 
-import { CreateProducts } from "../useCases/product/create.product";
-import { ListProducts } from "../useCases/product/list.products";
 
 export const productsRouter = Router();
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, callback) {
-      callback(null, path.resolve(__dirname, "../../..", "uploads"));
-    },
-    filename(req, file, callback) {
-      callback(null, `${Date.now()}-${file.originalname}`);
-    },
-  }),
-});
-
-
 // List products
-productsRouter.get("/products", ListProducts);
+productsRouter.get("/products", preductsUseCase.findAll);
 // create product
-productsRouter.post("/products", upload.single("imagePath"), CreateProducts);
+productsRouter.post(
+  "/products",
+  upload.single("imagePath"),
+  preductsUseCase.create
+);

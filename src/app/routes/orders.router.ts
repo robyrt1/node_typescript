@@ -1,18 +1,15 @@
 import { Router } from "express";
-import { ChangeOrderStatus } from "../useCases/orders/change.order.status";
-import { CreateOrders } from "../useCases/orders/create.orders";
-import { CancelOrder } from "../useCases/orders/delete.orders";
-import { ListOrders } from "../useCases/orders/list.orders";
-
+import { OrdersUseCase } from "../useCases/orders/orders.useCase";
+const ordersUseCase = new OrdersUseCase();
 
 export const OrdersRouter = Router();
 
 // List Orders
-OrdersRouter.get("/orders", ListOrders);
+OrdersRouter.get("/orders", ordersUseCase.findAll);
 // create Orders
-OrdersRouter.post("/orders", CreateOrders);
+OrdersRouter.post("/orders", ordersUseCase.create);
 // change order status
-OrdersRouter.patch("/orders/:orderId", ChangeOrderStatus);
+OrdersRouter.patch("/orders/:orderId", ordersUseCase.changeStatus);
 
 // Delete/cancel order
-OrdersRouter.delete("/orders/:orderId", CancelOrder);
+OrdersRouter.delete("/orders/:orderId", ordersUseCase.delete);
